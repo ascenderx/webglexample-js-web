@@ -1,36 +1,88 @@
 "use strict";
 
+/**
+ * 
+ */
 class CanvasApplication {
+  /**
+   * 
+   * @param {HTMLCanvasElement} canvas
+   */
   constructor(canvas) {
-    this.canvas = canvas;
+    /**
+     * @type {?WebGLRenderingContext}
+     */
     let gl = canvas.getContext('webgl');
+
     if (gl === null) {
       throw 'Error getting WebGL context.';
     }
-    this.graphics = gl;
-    this.timer = new AnimationTimer(this.onTick.bind(this), CanvasApplication.INTERVAL);
-    this.inputHandler = new InputHandler(canvas);
+
+    /**
+     * @type {HTMLCanvasElement}
+     */
+    this._canvas = canvas;
+
+    /**
+     * @type {WebGLRenderingContext}
+     */
+    this._graphics = gl;
+
+    /**
+     * @type {AnimationTimer}
+     */
+    this._timer = new AnimationTimer(
+      this._onTick.bind(this),
+      CanvasApplication._INTERVAL
+    );
+
+    /**
+     * @type {InputHandler}
+     */
+    this._inputHandler = new InputHandler(canvas);
   }
 
-  onTick() {
-    this.handleInput();
-    this.update();
-    this.draw();
+  /**
+   * @returns {boolean} 
+   */
+  _onTick() {
+    this._handleInput();
+    this._update();
+    this._draw();
+
     return true;
   }
 
-  handleInput() {
-    let input = this.inputHandler;
+  /**
+   * 
+   */
+  _handleInput() {
+    /**
+     * @type {InputHandler}
+     */
+    let input = this._inputHandler;
   }
 
-  update() {}
+  /**
+   * 
+   */
+  _update() {}
 
-  draw() {
-    let gl = this.graphics;
+  /**
+   * 
+   */
+  _draw() {
+    /**
+     * @type {WebGLRenderingContext}
+     */
+    let gl = this._graphics;
   }
 
+  /**
+   * 
+   */
   run() {
-    this.timer.resume();
+    this._timer.resume();
   }
 }
-CanvasApplication.INTERVAL = 50;
+CanvasApplication._INTERVAL = 50;

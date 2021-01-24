@@ -1,19 +1,59 @@
 "use strict";
 
+/**
+ * 
+ */
 class AnimationTimer {
+  /**
+   * 
+   * @param {() => boolean} callback 
+   * @param {number} interval 
+   */
   constructor(callback, interval) {
-    this.callback = callback;
-    this.interval = interval;
-    this.previous = 0;
-    this.handle = null;
-    this.tickCallback = this.onTick.bind(this);
+    /**
+     * @type {() => boolean}
+     */
+    this._callback = callback;
+
+    /**
+     * @type {number}
+     */
+    this._interval = interval;
+
+    /**
+     * @type {number}
+     */
+    this._previous = 0;
+
+    /**
+     * @type {?number}
+     */
+    this._handle = null;
+
+    /**
+     * @type {(timestamp: number) => void}
+     */
+    this._tickCallback = this.onTick.bind(this);
   }
 
+  /**
+   * 
+   * @param {number} timestamp 
+   */
   onTick(timestamp) {
-    let elapsed = timestamp - this.previous;
-    if (elapsed >= this.interval) {
-      this.previous = timestamp;
-      let status = this.callback();
+    /**
+     * @type {number}
+     */
+    let elapsed = timestamp - this._previous;
+
+    if (elapsed >= this._interval) {
+      this._previous = timestamp;
+
+      /**
+       * @type {boolean}
+       */
+      let status = this._callback();
+
       if (!status) {
         this.pause();
         return;
@@ -22,22 +62,31 @@ class AnimationTimer {
     this.fireNextFrame();
   }
 
+  /**
+   * 
+   */
   fireNextFrame() {
-    this.handle = window.requestAnimationFrame(this.tickCallback);
+    this._handle = window.requestAnimationFrame(this._tickCallback);
   }
 
+  /**
+   * 
+   */
   resume() {
-    if (this.handle !== null) {
+    if (this._handle !== null) {
       return;
     }
     this.fireNextFrame();
   }
   
+  /**
+   * 
+   */
   pause() {
-    if (this.handle === null) {
+    if (this._handle === null) {
       return;
     }
-    window.cancelAnimationFrame(this.handle);
-    this.handle = null;
+    window.cancelAnimationFrame(this._handle);
+    this._handle = null;
   }
 }
